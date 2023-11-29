@@ -1,5 +1,21 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from ninja import NinjaAPI, Schema
 
-def index(request):
-    return HttpResponse("Cadastro empresa")
+from .models import Empresa
+from .schemas import EmpresaSchema
+
+import json
+
+api = NinjaAPI()
+
+@api.get("/empresas", response=list[EmpresaSchema])
+def get_empresa(request):
+
+    empresa = Empresa.objects.all()   
+    return empresa
+ 
+
+@api.get("/empresa/{empresa_id}", response=EmpresaSchema)
+def get_by_id(request,empresa_id: int):
+   
+    empresa = Empresa.objects.get(pk=empresa_id)
+    return empresa
