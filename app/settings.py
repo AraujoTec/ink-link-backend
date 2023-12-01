@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     
     #APPS                        
-    'empresa'
+    'app.empresas'
         
 ]
 

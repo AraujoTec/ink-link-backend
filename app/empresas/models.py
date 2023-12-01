@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
 
-class Empresa(models.Model):
+class Empresas(models.Model):
     razao_social = models.CharField(max_length=200, default='')
     nome_fantasia = models.CharField(max_length=200, default='')
     cnpj = models.CharField(max_length=14, default='')
@@ -12,6 +12,8 @@ class Empresa(models.Model):
     data_atualizacao = models.DateTimeField(default=None)
     excluido = models.BooleanField(default=False)
     
+    class Meta:
+        db_table = "empresas"
+    
     def __str__(self):
         return f"{self.razao_social} - {self.cnpj}"  
-    
