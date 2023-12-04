@@ -1,21 +1,20 @@
-from ninja import NinjaAPI, Schema
+from ninja import Router
 from django.shortcuts import get_object_or_404
 from .models import Empresas
 from .schemas import EmpresaSchemaOut, EmpresaSchemaIn
 from .buscacnpj import busca_cnpj
 
-api = NinjaAPI()
+router = Router()
 
-
-@api.get("/empresas/", response=list[EmpresaSchemaOut])
+@router.get("/", response=list[EmpresaSchemaOut])
 def get_empresa(request):
     return Empresas.objects.all() 
 
-@api.get("/empresas/{empresa_id}/", response=EmpresaSchemaOut)
+@router.get("/{empresa_id}", response=EmpresaSchemaOut)
 def get_empresas_by_id(request,empresa_id: int):
     return get_object_or_404(Empresas, pk=empresa_id)
 
-@api.post("/empresas/")
+@router.post("/")
 def create_empresa(request, payload: EmpresaSchemaIn):
     dados_cadastrais = busca_cnpj(payload.cnpj)
     input_cnpj = Empresas.objects.filter(cnpj=payload.cnpj)
@@ -36,7 +35,7 @@ def create_empresa(request, payload: EmpresaSchemaIn):
         return {"id": empresa.id}
     return {"erro": "CNPJ já cadastrado"}
 
-@api.put("/empresas/{empresa_id}")
+@router.put("/{empresa_id}")
 def update_empresa(request, empresa_id: int, payload: EmpresaSchemaIn):
     empresa = get_object_or_404(Empresas, id=empresa_id)
     dados_cadastrais = busca_cnpj(payload.cnpj)
@@ -56,7 +55,7 @@ def update_empresa(request, empresa_id: int, payload: EmpresaSchemaIn):
     empresa.save()
     return {"success": True}
 
-@api.delete("/empresas/{empresa_id}")
+@router.delete("/{empresa_id}")
 def delete_empresa(request, empresa_id: int):
     empresa = get_object_or_404(Empresas, id=empresa_id)
     empresa.delete()

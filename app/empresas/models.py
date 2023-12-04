@@ -14,6 +14,8 @@ class Empresas(models.Model):
     
     class Meta:
         db_table = "empresas"
+        verbose_name = "Empresa"
+        verbose_name_plural = "Empresas"
     
     def __str__(self):
         return f"{self.razao_social} - {self.cnpj}"  
