@@ -1,7 +1,20 @@
 from django.db import models
 from datetime import datetime
+import uuid
 
-class Empresas(models.Model):
+class BaseModel(models.Model):
+    deleted = models.BooleanField(default=False)
+    class Meta:
+        abstract = True
+
+    def soft_delete(self):
+        self.deleted = True
+        self.save()     
+class BaseModelManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)    
+class Empresas(BaseModel):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     razao_social = models.CharField(max_length=200, default='')
     nome_fantasia = models.CharField(max_length=200, default='')
     cnpj = models.CharField(max_length=14, default='')
@@ -10,7 +23,6 @@ class Empresas(models.Model):
     user_alteracao = models.CharField(max_length=200, default='')
     data_cadastro = models.DateTimeField(default=datetime.now())
     data_atualizacao = models.DateTimeField(default=None)
-    excluido = models.BooleanField(default=False)
     
     class Meta:
         db_table = "empresas"

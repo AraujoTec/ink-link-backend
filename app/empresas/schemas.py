@@ -2,7 +2,7 @@ from ninja import Schema
 from datetime import datetime
 
 class EmpresaSchemaOut(Schema):
-    id: int
+    uuid: int
     razao_social: str
     nome_fantasia: str
     cnpj: str
@@ -11,8 +11,6 @@ class EmpresaSchemaOut(Schema):
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None
-    excluido: bool
-    
     
 class EmpresaSchemaIn(Schema):
     cnpj: str
@@ -20,5 +18,5 @@ class EmpresaSchemaIn(Schema):
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None
-  
-    
+class EmpresaSoftDelete(Schema):
+    deleted: bool = True
