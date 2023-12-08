@@ -1,5 +1,5 @@
 from ninja import Router
-from ninja.errors import HttpError
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from app.empresas.models import Empresas
 from app.empresas.schemas import EmpresaSchemaOut, EmpresaSchemaIn, EmpresaSoftDelete
@@ -7,7 +7,7 @@ from app.empresas.buscacnpj import busca_cnpj
 from app.auth import AuthBearer
 
 router = Router()
-_TGS = ['CRUD Empresas']
+_TGS = ['Empresas']
 
 #GETS
 @router.get("/",tags=_TGS, response=list[EmpresaSchemaOut])
@@ -37,32 +37,31 @@ def create_empresa(request, payload: EmpresaSchemaIn):
             }   
             
         empresa = Empresas.objects.create(**payload_dict)
-        return 200, {"message": "CREATE", "sucess": f'{"Empresa cadastrada com sucesso"}-{empresa.uuid}'}
-    return HttpError(400, "CPF já cadastrado")
+        return JsonResponse({"message": "CREATE", "sucess": f'{"Empresa cadastrada com sucesso"}-{empresa.uuid}'}, status=200)
+    return JsonResponse({'error': "CNPJ já cadastrado"}, status=400)
 
 #PUTS
 @router.put("/{cnpj}",tags=_TGS)
 def update_empresa(request, cnpj: int, payload: EmpresaSchemaIn):
-    empresa = get_object_or_404(Empresas, cnpj=cnpj)
     dados_cadastrais = busca_cnpj(payload.cnpj)
-    lista_empresas = list(Empresas.objects.filter(deleted=False))
-    if empresa in lista_empresas:
-        payload_dict= {
-            'razao_social': dados_cadastrais["nome"],
-            'nome_fantasia': dados_cadastrais["fantasia"],
-            'cnpj':payload.cnpj,
-            'telefone': dados_cadastrais["telefone"],
-            'user_criacao': payload.user_criacao,
-            "user_alteracao": payload.user_alteracao,
-            "data_cadastro": payload.data_cadastro,
-            "data_atualizacao": payload.data_atualizacao
-            }   
-        
-        for attr, value in payload_dict.items():
-            setattr(empresa, attr, value)
-        empresa.save()
-        return 200, {"message": "UPDATE", "sucess": "Empresa alterada com sucesso" }
-    raise HttpError(404, "Empresa inativa")
+    empresa = Empresas.objects.filter(cnpj=cnpj, deleted=False).first()
+    if not empresa:
+        raise JsonResponse({'error': "Cadatro inativo"}, status=400)
+    payload_dict= {
+        'razao_social': dados_cadastrais["nome"],
+        'nome_fantasia': dados_cadastrais["fantasia"],
+        'cnpj':payload.cnpj,
+        'telefone': dados_cadastrais["telefone"],
+        'user_criacao': payload.user_criacao,
+        "user_alteracao": payload.user_alteracao,
+        "data_cadastro": payload.data_cadastro,
+        "data_atualizacao": payload.data_atualizacao
+        }   
+    
+    for attr, value in payload_dict.items():
+        setattr(empresa, attr, value)
+    empresa.save()
+    return JsonResponse({"message": "UPDATE", "sucess": "Empresa alterada com sucesso"}, status=200)
 
 @router.put("/delete/{cnpj}",tags=_TGS)
 def soft_delete_user(request, cnpj: str, payload:EmpresaSoftDelete):
@@ -73,11 +72,11 @@ def soft_delete_user(request, cnpj: str, payload:EmpresaSoftDelete):
     if payload.is_active == False and payload.deleted == True:
         delete_user = Empresas.objects.get(cnpj=cnpj)
         delete_user.soft_delete()
-    return 200, {"message": "DELETE", "sucess": "Empresa deletada com sucesso"}
+    return JsonResponse({"message": "DELETE", "sucess": "Empresa deletada com sucesso"}, status=200)
 
 #DELETE
 @router.delete("/{cnpj}", tags=_TGS, auth=AuthBearer())
 def delete_empresa(request, cnpj: str):
     empresa = get_object_or_404(Empresas, cnpj=cnpj)
     empresa.delete()
-    return 200, {"message": "DELETE", "sucess": "Empresa deletada com sucesso"}
+    return JsonResponse({"message": "DELETE", "sucess": "Empresa excluida com sucesso"}, status=200)

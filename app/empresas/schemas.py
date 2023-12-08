@@ -11,12 +11,13 @@ class EmpresaSchemaOut(Schema):
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None
-    
+
 class EmpresaSchemaIn(Schema):
     cnpj: str
     user_criacao: str
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None
+
 class EmpresaSoftDelete(Schema):
     deleted: bool = True

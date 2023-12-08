@@ -18,6 +18,7 @@ class UserSchemaOut(Schema):
     is_staff: bool = True
     is_active: bool = True
     deleted: bool
+    
 class UserSchemaIn(Schema):
     username: str
     first_name: str
