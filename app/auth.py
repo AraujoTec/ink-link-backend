@@ -6,6 +6,6 @@ class AuthBearer(HttpBearer):
             return token
 
 class BasicAuth(HttpBasicAuth):
-    def authenticate(self, request, username, password, empresa):
-        if username == "admin" and password == "secret" and empresa == "1":
+    def authenticate(self, request, username, password):
+        if username == "admin" and password == "secret":
             return username
