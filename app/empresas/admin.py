@@ -3,8 +3,8 @@ from app.empresas.models import Empresas
 
 class EmpresasAdmin(admin.ModelAdmin):
     list_display =[
-                "cnpj",
                 "razao_social",
+                "cnpj",
                 "data_cadastro",
                 "deleted",
                 ]

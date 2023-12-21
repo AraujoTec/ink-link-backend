@@ -9,7 +9,7 @@ class UserSchemaBase(Schema):
     cpf: str
     data_nascimento: date = None
     empresa_id: str
-    funcao: str
+    cargo_id: str
     email: str
     password: str
     is_staff: bool = True

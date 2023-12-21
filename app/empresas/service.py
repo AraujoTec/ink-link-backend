@@ -35,12 +35,14 @@ class EmpresasService:
             'user_criacao': token.get("usuario_id"),
             }   
 
-    def create_empresa(self, payload: EmpresaSchemaIn):
+    def create_empresa(self, request, payload: EmpresaSchemaIn):
+    
         if self._get_empresa_by_cnpj(payload.cnpj).exists():
-            return JsonResponse(data={'error': "CNPJ já cadastrado"}, status=400)  
+            return JsonResponse(data={'error': "CNPJ já cadastrado"}, status=400) 
+        
         empresa = Empresas.objects.create(**payload.dict())
         return JsonResponse(data={"message": "CREATE", "sucess": f'{"Empresa cadastrada com sucesso"} - {empresa.id}'}, status=200)
-
+    
     def update_empresa(self, request, empresa_id: str, payload: EmpresaSchemaIn):
         empresa = self.get_empresas_by_id(empresa_id=empresa_id)
         if not empresa:

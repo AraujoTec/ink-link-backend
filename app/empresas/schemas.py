@@ -6,9 +6,9 @@ class EmpresaSchemaBase(Schema):
     razao_social: str
     nome_fantasia: str
     telefone: str
+
 class EmpresaSchemaOut(EmpresaSchemaBase):
     id: UUID
-    user_criacao: str
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None

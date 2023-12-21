@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'app.usuarios',
     'app.materiais',
     'app.authenticate',
+    'app.cargos',
         
 ]
 

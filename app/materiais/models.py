@@ -1,7 +1,8 @@
 from django.db import models
 from app.empresas.models import Empresas
-
+import uuid
 class Materiais(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     descricao = models.CharField(max_length=100)
     custo = models.IntegerField()
     preco_revenda = models.IntegerField()
