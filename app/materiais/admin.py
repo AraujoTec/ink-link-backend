@@ -5,7 +5,7 @@ from app.materiais.models import Materiais
 class MateriaisAdmin(admin.ModelAdmin):
     list_display =[
                 "descricao",
-                "empresas",
+                "empresa_id",
                 "estoque"
                 ]
 

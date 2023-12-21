@@ -12,7 +12,7 @@ class UsuariosService:
 
     def get_user_by_id(self, request, usuario_id: str):
         token = authenticate(request)
-        return Usuarios.objects.filter(id=usuario_id, empresa_id=token.get["empresa_id"])
+        return Usuarios.objects.filter(id=usuario_id, empresa_id=token.get["empresa_id"], deleted=False)
     
     def get_user_by_email(self, email: str):
         return get_object_or_404(Usuarios, email=email)
@@ -26,8 +26,8 @@ class UsuariosService:
             return JsonResponse(data={'error': "CPF inválido"}, status=400)
         return JsonResponse(data={'error': "CPF já cadastrado"}, status=400)
 
-    def update_user(self, usuario_id: str, payload: UserSchemaIn):
-        user = Usuarios.objects.filter(id=usuario_id, deleted=False).first()
+    def update_user(self, request, usuario_id: str, payload: UserSchemaIn):
+        user = self.get_user_by_id(request, usuario_id=usuario_id).first()
         if not user:
             return JsonResponse(data={'error': "Cadastro inativo"}, status=400)
         for attr, value in payload.dict(exclude_unset=True).items():
@@ -35,20 +35,20 @@ class UsuariosService:
         user.save()
         return JsonResponse(data={"message": "UPDATE", "sucess": "Cadastro alterado com sucesso"}, status=200)
         
-    def create_super_user(self, usuario_id: str, payload:SuperUser):
-        user = self.get_user_by_id(id=usuario_id)
+    def create_super_user(self,request, usuario_id: str, payload:SuperUser):
+        user = self.get_user_by_id(request, usuario_id=usuario_id)
         for attr, value in payload.dict().items():
             setattr(user, attr, value)
         user.save()
         return JsonResponse(data={"message": "UPDATE", "permissions": list(user.get_all_permissions())}, status=200)
 
-    def soft_delete_user(self, usuario_id: str):
-        delete_user = Usuarios.objects.get(id=usuario_id)
+    def soft_delete_user(self,request, usuario_id: str):
+        delete_user = self.get_user_by_id(request, usuario_id=usuario_id)
         delete_user.soft_delete()
         return JsonResponse(data={"message": "DELETE", "sucess": "Usuario deletado com sucesso"}, status=200)
 
-    def delete_user(self, usuario_id: str):
-        user = self.get_user_by_id(id=usuario_id)
+    def delete_user(self, request, usuario_id: str):
+        user = self.get_user_by_id(request, id=usuario_id)
         user.delete()
         return JsonResponse(data={"message": "DELETE", "sucess": "Usuario excluida com sucesso"}, status=200)
 

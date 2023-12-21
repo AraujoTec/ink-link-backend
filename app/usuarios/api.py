@@ -15,20 +15,20 @@ def busca_empresa(token):
 @router.get("", response=list[UserSchemaOut])
 def get_user(request):
     token = authenticate(request)
-    response = busca_empresa(token)
-    return response
+    return busca_empresa(token)
+    
 
 @router.get("{usuario_id}", response=UserSchemaOut)
 def get_user_by_id(request, usuario_id: str):
     token = authenticate(request)
-    response = service.get_user_by_id(request, usuario_id=token.get("usuario_id"))
-    return response
+    return service.get_user_by_id(request, usuario_id=token.get("usuario_id"))
+    
 
 #POSTS
 @router.post("", auth=None)
 def create_user(request, payload:UserSchemaIn):
-    response = service.create_user(payload)
-    return response
+    return service.create_user(payload)
+    
 
 #PATCH
 @router.patch("{usuario_id}")
@@ -36,16 +36,16 @@ def update_user(request, usuario_id: str, payload: UserSchemaIn):
     token = authenticate(request)
     if not busca_empresa(token).get(id=token.get("usuario_id")):
         return JsonResponse(data={'error': "usuário inválido"}, status=400)
-    response = service.update_user(usuario_id, payload)
-    return response
+    return service.update_user(request, usuario_id, payload)
+    
     
 @router.patch("superuser/{usuario_id}")
 def create_super_user(request, usuario_id: str, payload:SuperUser):
     token = authenticate(request)
     if not busca_empresa(token).get(id=token.get("usuario_id")) and token.get("is_superuser"): 
         return JsonResponse(data={'error': "usuário não autorizado"}, status=400)
-    response = service.create_super_user(usuario_id, payload)
-    return response
+    return service.create_super_user(usuario_id, payload)
+    
 
 #DELETE
 @router.delete("soft_delete/{usuario_id}")
@@ -53,14 +53,14 @@ def soft_delete_user(request, usuario_id: str):
     token = authenticate(request)
     if not busca_empresa(token).get(id=token.get("usuario_id")) and token.get("is_superuser"): 
         return JsonResponse(data={'error': "usuário não autorizado"}, status=400)
-    response = service.soft_delete_user(usuario_id)
-    return response
+    return service.soft_delete_user(request, usuario_id)
+    
 
 @router.delete("{usuario_id}")
 def delete_user(request, usuario_id: str):
     token = authenticate(request)
     if not busca_empresa(token).get(id=token.get("usuario_id")) and token.get("is_superuser"): 
         return JsonResponse(data={'error': "usuário não autorizado"}, status=400)    
-    response = service.delete_user(usuario_id) 
-    return response
+    return service.delete_user(request, usuario_id) 
+    
    

@@ -6,8 +6,8 @@ from app.utils.jwt_manager import authenticate
 
 router = Router(auth=JWTAuth(), tags=["Materiais"] )
 
-
 service = MateriaisService()
+
 #GETS
 @router.get("/", response=list[MateriaisSchema])
 def get_itens(request):
@@ -17,7 +17,8 @@ def get_itens(request):
 
 @router.get("/{item_id}", response=MateriaisSchema)
 def get_item_by_id(request, item_id: int):
-    response = service.get_item_by_id(item_id)
+    token = authenticate(request)
+    response = service.get_item_by_id(item_id, token.get("empresa_id"))
     return response
 
 #POSTS

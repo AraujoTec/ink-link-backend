@@ -5,6 +5,6 @@ class MateriaisSchema(Schema):
     descricao: str
     custo: float
     preco_revenda: float
-    empresas: str
+    empresa_id: str
     data_validade: date = None
     estoque: int

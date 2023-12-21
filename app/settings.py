@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'app.empresas',
     'app.usuarios',
     'app.materiais',
-    'app.authenticate'
+    'app.authenticate',
         
 ]
 

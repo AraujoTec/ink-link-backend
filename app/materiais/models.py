@@ -1,23 +1,11 @@
 from django.db import models
 from app.empresas.models import Empresas
 
-class BaseModel(models.Model):
-    class Meta:
-        abstract = True
-
-    def soft_delete(self):
-        self.deleted = True
-        self.save()   
-          
-class BaseModelManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter() 
-       
-class Materiais(BaseModel):
+class Materiais(models.Model):
     descricao = models.CharField(max_length=100)
     custo = models.IntegerField()
     preco_revenda = models.IntegerField()
-    empresas = models.ForeignKey(Empresas, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
     data_validade = models.DateField(default = None)
     estoque = models.IntegerField()
     class Meta:
