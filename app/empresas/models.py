@@ -23,7 +23,6 @@ class Empresas(BaseModel):
     user_alteracao = models.CharField(max_length=200, default='')
     data_cadastro = models.DateTimeField(default=datetime.now())
     data_atualizacao = models.DateTimeField(default=None)
-    
     class Meta:
         db_table = "empresas"
         verbose_name = "Empresa"
