@@ -1,23 +1,20 @@
 from ninja import Schema
 from datetime import datetime
-
-class EmpresaSchemaOut(Schema):
-    uuid: int
+from uuid import UUID
+class EmpresaSchemaBase(Schema):
+    cnpj: str
     razao_social: str
     nome_fantasia: str
-    cnpj: str
     telefone: str
+class EmpresaSchemaOut(EmpresaSchemaBase):
+    id: UUID
     user_criacao: str
     user_alteracao: str
     data_cadastro: datetime = None
     data_atualizacao: datetime = None
 
-class EmpresaSchemaIn(Schema):
-    cnpj: str
-    user_criacao: str
-    user_alteracao: str
-    data_cadastro: datetime = None
-    data_atualizacao: datetime = None
-
-class EmpresaSoftDelete(Schema):
-    deleted: bool = True
+class EmpresaSchemaAuto(EmpresaSchemaBase):
+    pass
+    
+class EmpresaSchemaIn(EmpresaSchemaBase):
+    pass

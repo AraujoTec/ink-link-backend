@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     #APPS                        
     'app.empresas',
     'app.usuarios',
-    'app.materiais'
+    'app.materiais',
+    'app.authenticate'
         
 ]
 
@@ -57,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -118,7 +120,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -132,3 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ORIGINS = [
     'http://localhost:8000'
 ]
+
+AUTH_USER_MODEL = "authenticate.User"

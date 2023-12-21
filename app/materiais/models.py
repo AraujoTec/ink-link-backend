@@ -18,7 +18,8 @@ class Materiais(BaseModel):
     custo = models.IntegerField()
     preco_revenda = models.IntegerField()
     empresas = models.ForeignKey(Empresas, on_delete=models.CASCADE)
-
+    data_validade = models.DateField(default = None)
+    estoque = models.IntegerField()
     class Meta:
         db_table = "materiais"
         verbose_name = "material"

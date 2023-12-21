@@ -1,53 +1,30 @@
 from ninja import Schema
 from datetime import date, datetime
+from uuid import UUID
 
-class UserSchemaOut(Schema):
-    uuid: str
+
+class UserSchemaBase(Schema):
     first_name: str
     last_name: str
-    username: str
     cpf: str
-    data_nascimento: date = None   
-    empresas_id: str
+    data_nascimento: date = None
+    empresa_id: str
     funcao: str
     email: str
-    password: str  
+    password: str
+    is_staff: bool = True
+class UserSchemaOut(UserSchemaBase):
+    id: UUID
     last_login: datetime = None
     date_joined: datetime = datetime.now()
     is_superuser: bool = False
-    is_staff: bool = True
     is_active: bool = True
     deleted: bool
-    
-class UserSchemaIn(Schema):
-    username: str
-    first_name: str
-    last_name: str
-    funcao: str
-    cpf: str
-    data_nascimento: date = None
-    is_staff: bool = True
-    empresas_id: str
-    email: str
-    password: str
-    
-class UserUpdate(Schema):
-    username: str
-    first_name: str
-    last_name: str
-    funcao: str
-    cpf: str
-    data_nascimento: date = None
-    is_staff: bool = True
-    empresas_id: int
-
-class UserSoftDelete(Schema):
-    is_active: bool = False
-    deleted: bool = True
-    
+        
+class UserSchemaIn(UserSchemaBase):
+    pass
 class SuperUser(Schema):
     is_superuser: bool = True
-    
     
 
     
