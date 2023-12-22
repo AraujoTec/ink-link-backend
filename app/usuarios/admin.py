@@ -6,7 +6,8 @@ class UsuariosAdmin(admin.ModelAdmin):
                 "last_name",
                 "email",
                 "data_nascimento",
-                "empresa_id",
+                "empresa",
+                "cargo"
                 ]
 
 admin.site.register(Usuarios, UsuariosAdmin)

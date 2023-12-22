@@ -26,4 +26,4 @@ class CargosService:
         
         cargo = Cargos.objects.filter(id=cargo_id, empresa_id=token.get("empresa_id"))
         cargo.delete()
-        return JsonResponse(data={"message": "DELETE", "sucess": "Empresa excluida com sucesso"}, status=200)
+        return JsonResponse(data={"message": "DELETE", "sucess": "Cargo excluido com sucesso"}, status=200)

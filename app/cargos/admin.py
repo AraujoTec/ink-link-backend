@@ -6,7 +6,7 @@ class CargosAdmin(admin.ModelAdmin):
     list_display =[
                 "cargo",
                 "id",
-                "empresa_id",
+                "empresa",
                 ]
 
 admin.site.register(Cargos, CargosAdmin)

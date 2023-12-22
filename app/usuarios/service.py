@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from app.usuarios.models import Usuarios
 from app.usuarios.schemas import UserSchemaIn, SuperUser
-from app.usuarios.models import Usuarios
 from app.utils.jwt_manager import authenticate
 
 class UsuariosService:
@@ -19,12 +18,12 @@ class UsuariosService:
 
     def create_user(self, payload:UserSchemaIn):
         busca_cpf = Usuarios.objects.filter(cpf=payload.cpf)
-        if not busca_cpf :
-            if payload.cpf.isdigit() == True: 
-                user = Usuarios.objects.create_user(**payload.dict())
-                return JsonResponse(data={"message": "CREATE", "sucess": f'{"Usuario cadastrado com sucesso"} - {user.id}'}, status=200)
+        if busca_cpf :
+            return JsonResponse(data={'error': "CPF já cadastrado"}, status=400)
+        if not payload.cpf.isdigit() == True: 
             return JsonResponse(data={'error': "CPF inválido"}, status=400)
-        return JsonResponse(data={'error': "CPF já cadastrado"}, status=400)
+        user = Usuarios.objects.create_user(**payload.dict())
+        return JsonResponse(data={"message": "CREATE", "sucess": f'{"Usuario cadastrado com sucesso"} - {user.id}'}, status=200)
 
     def update_user(self, request, usuario_id: str, payload: UserSchemaIn):
         user = self.get_user_by_id(request, usuario_id=usuario_id).first()
