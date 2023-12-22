@@ -21,9 +21,9 @@ class CargosService:
         cargo = Cargos.objects.create(**payload_dict)
         return JsonResponse(data={"message": "CREATE", "sucess": f'{"Cargo criado com sucesso"} - {cargo.id}'}, status=200)
     
-    def delete_cargo(self, request, id: str):
+    def delete_cargo(self, request, cargo_id: str):
         token = authenticate(request)
         
-        cargo = Cargos.objects.filter(id=id, empresa_id=token.get("empresa_id"))
+        cargo = Cargos.objects.filter(id=cargo_id, empresa_id=token.get("empresa_id"))
         cargo.delete()
         return JsonResponse(data={"message": "DELETE", "sucess": "Empresa excluida com sucesso"}, status=200)

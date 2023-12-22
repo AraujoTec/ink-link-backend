@@ -12,7 +12,7 @@ class UsuariosService:
 
     def get_user_by_id(self, request, usuario_id: str):
         token = authenticate(request)
-        return Usuarios.objects.filter(id=usuario_id, empresa_id=token.get["empresa_id"], deleted=False)
+        return Usuarios.objects.filter(id=usuario_id, empresa_id=token.get("empresa_id"), deleted=False)
     
     def get_user_by_email(self, email: str):
         return get_object_or_404(Usuarios, email=email)
@@ -36,7 +36,7 @@ class UsuariosService:
         return JsonResponse(data={"message": "UPDATE", "sucess": "Cadastro alterado com sucesso"}, status=200)
         
     def create_super_user(self,request, usuario_id: str, payload:SuperUser):
-        user = self.get_user_by_id(request, usuario_id=usuario_id)
+        user = self.get_user_by_id(request, usuario_id=usuario_id).first()
         for attr, value in payload.dict().items():
             setattr(user, attr, value)
         user.save()

@@ -8,8 +8,8 @@ class UserSchemaBase(Schema):
     last_name: str
     cpf: str
     data_nascimento: date = None
-    empresa_id: str
-    cargo_id: str
+    empresa_id: UUID
+    cargo_id: UUID
     email: str
     password: str
     is_staff: bool = True

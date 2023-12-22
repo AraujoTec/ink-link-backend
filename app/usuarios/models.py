@@ -8,7 +8,7 @@ class Usuarios(User, BaseModel):
     data_nascimento = models.DateField(default=None, null=True, blank=True)
     cpf = models.CharField(max_length=11, null=False, blank=False)
     empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
-    cargo = models.ForeignKey(Cargos,on_delete=models.CASCADE)
+    cargo = models.ForeignKey(Cargos, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "usuarios"

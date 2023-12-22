@@ -21,8 +21,8 @@ def create_cargo(request, payload: CargoSchema):
     return response
 
 #DELETE
-@cargos_router.delete("{id}")
-def delete_cargo(request, id: str):
-    response = service.delete_cargo(request, id)
+@cargos_router.delete("{cargo_id}")
+def delete_cargo(request, cargo_id: str):
+    response = service.delete_cargo(request, cargo_id)
     return response
 

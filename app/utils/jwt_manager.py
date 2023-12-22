@@ -10,7 +10,7 @@ def generate_jwt_token(usuarios: Usuarios, expiration_time_in_hours: int = 1):
 
     payload = {
         "usuario_id": str(usuarios.id),
-        "empresa_id": str(usuarios.id),
+        "empresa_id": str(usuarios.empresa),
         "exp": expiration_time,
         "is_superuser": usuarios.is_superuser,
         "name": f"{usuarios.first_name} {usuarios.last_name}"

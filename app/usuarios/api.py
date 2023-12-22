@@ -44,7 +44,7 @@ def create_super_user(request, usuario_id: str, payload:SuperUser):
     token = authenticate(request)
     if not busca_usuarios(token).get(id=token.get("usuario_id")) and token.get("is_superuser"): 
         return JsonResponse(data={'error': "usuário não autorizado"}, status=400)
-    return service.create_super_user(usuario_id, payload)
+    return service.create_super_user(request, usuario_id, payload)
     
 
 #DELETE

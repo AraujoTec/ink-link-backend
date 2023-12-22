@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from app.authenticate.schemas import LoginSchemaIn
-from app.authenticate.models import User
+from app.usuarios.models import Usuarios
 
 from app.utils import jwt_manager
 from jose import jwt, ExpiredSignatureError
@@ -15,7 +15,7 @@ class AuthService():
     def auth_login(self, request, payload: LoginSchemaIn):
         self.auth_logout(request)
 
-        user = get_object_or_404(User, email=payload.email)
+        user = get_object_or_404(Usuarios, email=payload.email)
         
         if not user:
             return JsonResponse(data={"error": "Invalid credentials"}, status=401)
