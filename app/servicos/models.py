@@ -8,6 +8,7 @@ class Servicos(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     servico = models.CharField(max_length=200)    
     empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
+    valor = models.FloatField(max_length=200, default=0)
     
     
     class Meta:

@@ -4,6 +4,7 @@ from app.authenticate.models import User
 from app.servicos.models import Servicos
 from app.usuarios.models import Usuarios
 from app.payments.models import Payments
+from app.empresas.models import Empresas
 
 
 class Clientes(User, BaseModel):
@@ -14,13 +15,15 @@ class Clientes(User, BaseModel):
     cep = models.CharField(max_length=8, null=None, blank=True)
     telefone = models.CharField(max_length=11)
     servico = models.ForeignKey(Servicos, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
+    colaborador = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
+    empresa = models. ForeignKey(Empresas, on_delete=models.CASCADE)
     forma_pagamento = models.ForeignKey(Payments, on_delete=models.CASCADE)
     
     class Meta:
-        db_table = "clientes"
+        db_table = "cliente"
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
     
     def __str__(self):
-        return f'{self.first_name} {self.last_name} - {self.cpf}'
+        return Clientes.get_full_name(self)
+    

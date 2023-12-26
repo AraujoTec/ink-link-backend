@@ -36,7 +36,10 @@ class EmpresasService:
             }   
 
     def create_empresa(self, request, payload: EmpresaSchemaIn):
-    
+        
+        if not payload.cnpj.isdigit():
+            return JsonResponse(data={'error': "CNPJ inválido"}, status=400) 
+        
         if self._get_empresa_by_cnpj(payload.cnpj).exists():
             return JsonResponse(data={'error': "CNPJ já cadastrado"}, status=400) 
         

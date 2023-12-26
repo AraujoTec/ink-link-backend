@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'app.clientes',
     'app.servicos',
     'app.payments',
+    'app.agendamento',
+    'app.detalhe_servico'
+    
 ]
 
 

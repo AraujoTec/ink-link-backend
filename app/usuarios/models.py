@@ -11,7 +11,7 @@ class Usuarios(User, BaseModel):
     cargo = models.ForeignKey(Cargos, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "usuarios"
+        db_table = "colaborador"
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
     

@@ -8,7 +8,7 @@ class ClientesAdmin(admin.ModelAdmin):
                     "cpf",
                     "instagram",
                     "servico",
+                    "empresa"
                     ]
 
-admin.site.register(Clientes)
-
+admin.site.register(Clientes, ClientesAdmin)
