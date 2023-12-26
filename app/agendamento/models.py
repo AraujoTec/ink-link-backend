@@ -11,7 +11,7 @@ class Agendamento(models.Model):
     cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
     empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
     colaborador = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
-    detalhes = models.ForeignKey(Detalhes, on_delete=models.CASCADE)
+    detalhes_servico = models.ForeignKey(Detalhes, on_delete=models.CASCADE)
     data_agendamento=models.DateField(blank=True, null=None)
     data_pagamento=models.DateField(blank=True, null=None)
     forma_pagamento = models.ForeignKey(Payments, on_delete=models.CASCADE)

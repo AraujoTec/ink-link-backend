@@ -2,7 +2,7 @@ from ninja import Router
 from app.detalhe_servico.schemas import DetalheBase, DetalheSchemaOut
 from app.detalhe_servico.service import DetalheService
 
-detalhes_router = Router()
+detalhes_router = Router(tags=["Detalhes do Serviço"])
 
 service = DetalheService ()
 

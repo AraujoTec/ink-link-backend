@@ -19,7 +19,7 @@ def get_user(request):
     
 
 @usuarios_router.get("{usuario_id}", response=UserSchemaOut)
-def get_user_by_id(request, usuario_id: str):
+def get_user_by_id(request):
     token = authenticate(request)
     return service.get_user_by_id(request, usuario_id=token.get("usuario_id"))
     

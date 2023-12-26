@@ -4,11 +4,11 @@ from uuid import UUID
 class DetalheBase(Schema):
     servico_id: UUID
     materiais_id: UUID
-    quantidade: str
+    quantidade: int
  
     
 class DetalheSchemaOut(DetalheBase):
     id: UUID
-    valor_total: str
-    lucro_estudio: str
-    lucro_colaborador: str
+    valor_total: float
+    lucro_estudio: float
+    lucro_colaborador: float

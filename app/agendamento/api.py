@@ -5,7 +5,7 @@ from app.authenticate.service import JWTAuth
 from app.utils.jwt_manager import authenticate
 from django.http import JsonResponse
 
-agendamento_router = Router()
+agendamento_router = Router(tags=["Agendamento"])
 service = AgendaService ()
 
 #GETS

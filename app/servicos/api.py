@@ -14,7 +14,7 @@ def get_servico(request, empresa_id: str):
     return response
 
 #POST
-@servicos_router.post("servico")
+@servicos_router.post("servico/")
 def create_servico(request, payload: ServicoSchema):
     response = service.create_servico(payload)
     return response

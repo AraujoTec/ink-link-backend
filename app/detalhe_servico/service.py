@@ -7,6 +7,23 @@ from app.servicos.models import Servicos
 
 
 class DetalheService:
+    
+    def _calculos(self, material, servico, payload):
+        preco_revenda = material.preco_revenda
+        preco_custo = material.custo
+        preco_servico = servico.valor
+        quantidade = payload.quantidade
+        valor_revenda = preco_revenda * quantidade
+        valor_custo = preco_custo * quantidade
+        
+        dados = payload.dict()
+        dados["valor_total"] = valor_revenda + preco_servico
+        dados["lucro_estudio"] = valor_custo + (preco_servico/2)
+        dados["lucro_colaborador"] = preco_servico/2
+        
+        return dados
+    
+    
     def get_servico(self):
         return Detalhes.objects.all() 
 
@@ -14,27 +31,25 @@ class DetalheService:
         return Detalhes.objects.filter(id=detalhe_id) 
 
     def create_servico(self, payload: DetalheBase):
-        material = Materiais.objects.filter(id=payload.materiais_id)
-        busca_servico = Servicos.objects.filter(id=payload.servico_id).first()
-        valor_total=material.first().preco_revenda*payload.quantidade
-        
-        payload_dict = payload.dict()
-        payload_dict["valor_total"] = valor_total + busca_servico.valor
-        payload_dict["lucro_estudio"] = (material.first().custo*payload.quantidade) + (busca_servico.valor/2)
-        payload_dict["lucro_colaborador"] = busca_servico.valor/2
-        
-        servico = Detalhes.objects.create(**payload_dict)
-        
-        estoque_atual = material.first().estoque-payload.quantidade
-        if estoque_atual < 0:
+        material = Materiais.objects.filter(id=payload.materiais_id).first()
+        servico = Servicos.objects.filter(id=payload.servico_id).first()
+               
+        if material.estoque < 0 or payload.quantidade>material.estoque:
             return JsonResponse(data={"erro":"estoque insuficiente"}, status=400)
+        
+        dados = self._calculos(material, servico, payload)       
+               
+        detalhes_servico = Detalhes.objects.create(**dados)
+        
+        material.estoque -= payload.quantidade
+        
             
-        estoque = {"estoque": estoque_atual}
+        estoque = {"estoque": material.estoque}
         for attr, value in estoque.items():
             setattr(material, attr, value)
         material.save()
         
-        return JsonResponse(data={"message": "CREATE", "sucess": f'{"Serviço criado com sucesso"} - {servico.id}'}, status=200)
+        return JsonResponse(data={"message": "CREATE", "sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}'}, status=200)
     
     def update_servico(self, detalhe_id: str, payload: DetalheBase):
         servico = self.get_servico_by_id(id=detalhe_id)
