@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from app.empresas.models import Empresas 
 import uuid
 
 
@@ -38,6 +39,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField("email address", unique=True)
+    empresa = models.ForeignKey(Empresas, on_delete=models.SET_NULL, blank=True, null=True)
     
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

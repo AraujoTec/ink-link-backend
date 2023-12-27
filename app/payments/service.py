@@ -15,15 +15,15 @@ class PaymentService:
             return JsonResponse(data={'error': "Forma de pagamento já cadastrada"}, status=400) 
         
         
-        payload_dict = payload.dict()
-        payload_dict["empresa_id"] = token.get("empresa_id")
+        dados = payload.dict()
+        dados["empresa_id"] = token.get("empresa_id")
         
-        payment = Payments.objects.create(**payload_dict)
-        return JsonResponse(data={"message": "CREATE", "sucess": f'{"Forma de pagamento criada com sucesso"} - {payment.id}'}, status=200)
+        payment = Payments.objects.create(**dados)
+        return JsonResponse(data={"sucess": f'{"Forma de pagamento criada com sucesso"} - {payment.id}'}, status=200)
     
     def delete_payment(self, request, payment_id: str):
         token = authenticate(request)
         
         payment = Payments.objects.filter(id=payment_id, empresa_id=token.get("empresa_id"))
         payment.delete()
-        return JsonResponse(data={"message": "DELETE", "sucess": "Forma de pagamento excluida com sucesso"}, status=200)
+        return JsonResponse(data={"sucess": "Forma de pagamento excluida com sucesso"}, status=200)

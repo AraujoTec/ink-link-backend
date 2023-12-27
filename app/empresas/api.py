@@ -2,9 +2,6 @@ from ninja import Router
 from app.empresas.service import EmpresasService
 from app.empresas.schemas import EmpresaSchemaOut, EmpresaSchemaIn, EmpresaSchemaAuto
 from app.authenticate.service import JWTAuth
-from app.utils.jwt_manager import authenticate
-from django.http import JsonResponse
-
 
 empresas_router = Router(auth=JWTAuth(), tags=['Empresas'])
 service = EmpresasService ()
@@ -34,25 +31,17 @@ def create_empresa(request, payload: EmpresaSchemaIn):
 #PATCH
 @empresas_router.patch("{empresa_id}")
 def update_empresa(request, empresa_id: str, payload: EmpresaSchemaIn):
-    token = authenticate(request)    
-    if not token.get("empresa_id") == empresa_id and token.get("is_superuser") == True:
-        return JsonResponse(data={'error': "usuário inválido"}, status=400)
     return service.update_empresa(request, empresa_id, payload)
     
 
 #DELETE
 @empresas_router.delete("delete/{empresa_id}")
 def soft_delete_empresa(request, empresa_id: str):
-    token = authenticate(request)    
-    if not token.get("empresa_id") == empresa_id and token.get("is_superuser") == True:
-        return JsonResponse(data={'error': "usuário inválido"}, status=400)
+   
     return service.soft_delete_empresa(empresa_id)
     
 
 @empresas_router.delete("{empresa_id}")
 def delete_empresa(request, empresa_id: str):
-    token = authenticate(request)    
-    if not token.get("empresa_id") == empresa_id and token.get("is_superuser") == True:
-        return JsonResponse(data={'error': "usuário inválido"}, status=400)
     return service.delete_empresa(empresa_id)
     

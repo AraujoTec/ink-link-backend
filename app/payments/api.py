@@ -11,18 +11,18 @@ service = PaymentService ()
 @payments_router.get("", response=list[PaymentSchemaOut])
 def get_payment(request):
     token = authenticate(request)
-    response = service.get_payment(empresa_id=token.get("empresa_id"))    
-    return response
+    return service.get_payment(empresa_id=token.get("empresa_id"))    
+    
 
 #POST
-@payments_router.post("cargo")
+@payments_router.post("payments")
 def create_payment(request, payload: PaymentSchema):
-    response = service.create_payment(request, payload)
-    return response
+    return service.create_payment(request, payload)
+    
 
 #DELETE
 @payments_router.delete("{payment_id}")
 def delete_payment(request, payment_id: str):
-    response = service.delete_payment(request, payment_id)
-    return response
+    return service.delete_payment(request, payment_id)
+    
 

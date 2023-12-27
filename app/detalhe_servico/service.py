@@ -4,8 +4,6 @@ from app.detalhe_servico.schemas import DetalheBase
 from app.materiais.models import Materiais
 from app.servicos.models import Servicos
 
-
-
 class DetalheService:
     
     def _calculos(self, material, servico, payload):
@@ -24,11 +22,11 @@ class DetalheService:
         return dados
     
     
-    def get_servico(self):
-        return Detalhes.objects.all() 
+    def get_servico(self, empresa_id: str):
+        return Detalhes.objects.filter(empresa_id=empresa_id) 
 
-    def get_servico_by_id(self, detalhe_id: str):
-        return Detalhes.objects.filter(id=detalhe_id) 
+    def get_servico_by_id(self, detalhe_id: str, empresa_id: str):
+        return Detalhes.objects.filter(id=detalhe_id, empresa_id=empresa_id) 
 
     def create_servico(self, payload: DetalheBase):
         material = Materiais.objects.filter(id=payload.materiais_id).first()
@@ -49,16 +47,16 @@ class DetalheService:
             setattr(material, attr, value)
         material.save()
         
-        return JsonResponse(data={"message": "CREATE", "sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}'}, status=200)
+        return JsonResponse(data={"sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}'}, status=200)
     
-    def update_servico(self, detalhe_id: str, payload: DetalheBase):
-        servico = self.get_servico_by_id(id=detalhe_id)
+    def update_servico(self, detalhe_id: str, empresa_id: str, payload: DetalheBase):
+        detalhes_servico = self.get_servico_by_id(detalhe_id=detalhe_id, empresa_id=empresa_id)
         for attr, value in payload.dict.items():
-            setattr(servico, attr, value)
-        servico.save()
-        return JsonResponse(data={"message": "UPDATE", "sucess": "Agenda alterada com sucesso"}, status=200)
+            setattr(detalhes_servico, attr, value)
+        detalhes_servico.save()
+        return JsonResponse(data={"sucess": "Agenda alterada com sucesso"}, status=200)
     
-    def delete_servico(self, detalhe_id: str):
-        detalhe = Detalhes.objects.filter(id=detalhe_id)
-        detalhe.delete()
-        return JsonResponse(data={"message": "DELETE", "sucess": "Serviço excluído com sucesso"}, status=200)
+    def delete_servico(self, detalhe_id: str, empresa_id: str):
+        detalhes_servico = self.get_servico_by_id(detalhe_id=detalhe_id, empresa_id=empresa_id)
+        detalhes_servico.delete()
+        return JsonResponse(data={"sucess": "Serviço excluído com sucesso"}, status=200)

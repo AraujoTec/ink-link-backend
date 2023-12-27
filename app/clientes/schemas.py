@@ -11,8 +11,8 @@ class ClienteSchemaBase(Schema):
     email: str
     password: str
     is_staff: bool = True
-    cep: int = None
-    instagrem: str = None
+    cep: str = None
+    instagram: str = None
 
 class ClienteSchemaOut(ClienteSchemaBase):
     id: UUID
@@ -23,7 +23,7 @@ class ClienteSchemaOut(ClienteSchemaBase):
         
 class ClienteSchemaIn(ClienteSchemaBase):
     servico_id: UUID
-    usuario_id: UUID
+    colaborador_id: UUID
     forma_pagamento_id: UUID
     empresa_id: UUID
 

@@ -4,7 +4,6 @@ from app.authenticate.models import User
 from app.servicos.models import Servicos
 from app.usuarios.models import Usuarios
 from app.payments.models import Payments
-from app.empresas.models import Empresas
 
 
 class Clientes(User, BaseModel):
@@ -16,8 +15,10 @@ class Clientes(User, BaseModel):
     telefone = models.CharField(max_length=11)
     servico = models.ForeignKey(Servicos, on_delete=models.CASCADE)
     colaborador = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
-    empresa = models. ForeignKey(Empresas, on_delete=models.CASCADE)
     forma_pagamento = models.ForeignKey(Payments, on_delete=models.CASCADE)
+    
+    is_superuser = None
+    IS_SUPERUSER_FIELD = False
     
     class Meta:
         db_table = "cliente"

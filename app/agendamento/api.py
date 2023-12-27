@@ -3,20 +3,26 @@ from app.agendamento.service import AgendaService
 from app.agendamento.schemas import AgendaSchemaOut, AgendaBase
 from app.authenticate.service import JWTAuth
 from app.utils.jwt_manager import authenticate
-from django.http import JsonResponse
 
-agendamento_router = Router(tags=["Agendamento"])
+agendamento_router = Router(auth=JWTAuth(), tags=["Agendamento"])
 service = AgendaService ()
+
 
 #GETS
 @agendamento_router.get("", response=list[AgendaSchemaOut])
 def get_agenda(request):
-    return service.get_agenda()    
+    token = authenticate(request)
+    return service.get_agenda(token.get("empresa_id"))    
     
-
-@agendamento_router.get("{agendamento_id}", response=AgendaSchemaOut)
+@agendamento_router.get("{agendamento_id}", response=list[AgendaSchemaOut])
 def get_agendamento_by_id(request, agendamento_id: str):
-    return service.get_agendamentos_by_id(id = agendamento_id)
+    token = authenticate(request)
+    return service.get_agendamento_by_id(agendamento_id, token.get("empresa_id"))
+
+@agendamento_router.get("colaborador/{colaborador_id}", response=list[AgendaSchemaOut])
+def get_agenda_by_colaborador(request, colaborador_id: str):
+    token = authenticate(request)
+    return service.get_agenda_by_colaborador(colaborador_id, token.get("empresa_id"))
 
 #POST
 @agendamento_router.post("")
@@ -25,13 +31,15 @@ def create_agenda(request, payload: AgendaBase):
     
 
 #PATCH
-@agendamento_router.patch("{agendamento_id}")
+@agendamento_router.patch("{agendamento_id}", response=list[AgendaSchemaOut])
 def update_agenda(request, agendamento_id: str, payload: AgendaBase):
-    return service.update_agenda(agendamento_id, payload)
+    token = authenticate(request)
+    return service.update_agenda(agendamento_id, token.get("empresa_id"), payload)
     
 
 #DELETE
 @agendamento_router.delete("{agendamento_id}")
 def delete_agenda(request, agendamento_id: str):
-    return service.delete_agenda(agendamento_id)
+    token = authenticate(request)
+    return service.delete_agenda(agendamento_id, token.get("empresa_id"))
     

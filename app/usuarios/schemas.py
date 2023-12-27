@@ -23,9 +23,3 @@ class UserSchemaOut(UserSchemaBase):
         
 class UserSchemaIn(UserSchemaBase):
     pass
-class SuperUser(Schema):
-    is_superuser: bool = True
-    
-
-    
-    
