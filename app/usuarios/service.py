@@ -2,15 +2,46 @@ from django.http import JsonResponse
 from app.usuarios.models import Usuarios
 from app.usuarios.schemas import UserSchemaIn
 from app.utils.jwt_manager import authenticate
-
+import csv
 class UsuariosService:
 
-    def get_user(self, empresa_id):
+    def get_user(self, empresa_id: str):
         return Usuarios.objects.filter(empresa_id=empresa_id, deleted=False) 
 
     def get_user_by_id(self, request, usuario_id: str):
         token = authenticate(request)
         return Usuarios.objects.filter(id=usuario_id, empresa_id=token.get("empresa_id"), deleted=False)
+
+    def create_csv(self, request):
+        token = authenticate(request)
+        colaborador = self.get_user(token.get("empresa_id"))
+        dados = [[
+                    'colaborador_id',
+                    'nome',
+                    'empresa',
+                    'cargo',
+                    'data_nascimento',
+                    'cpf'
+                ],]
+    
+        for itens in colaborador:
+            valores = [
+                        str(itens.id),  
+                        f'{str(itens.first_name)} {itens.last_name}',
+                        str(itens.empresa),
+                        str(itens.cargo),
+
+                        str(itens.data_nascimento),
+                        str(itens.cpf)               
+                     ]
+            dados.append(valores)
+    
+        with open('/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv', 'w') as arquivo:
+            relatorio_colaborador = csv.writer(arquivo)
+            for linha in dados:
+                relatorio_colaborador.writerow(linha)
+        
+        return JsonResponse(data={"sucess": "Relatório disponibilizado"}, status=200)   
 
     def create_user(self, payload:UserSchemaIn):
         busca_cpf = Usuarios.objects.filter(cpf=payload.cpf)

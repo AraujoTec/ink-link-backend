@@ -4,7 +4,7 @@ from app.empresas.models import Empresas
 from app.empresas.schemas import EmpresaSchemaIn
 from app.utils.busca_cnpj import busca_cnpj
 from app.utils.jwt_manager import authenticate
-
+import csv
 class EmpresasService:
     
     def _get_empresa_by_cnpj(self, cnpj):
@@ -15,6 +15,42 @@ class EmpresasService:
 
     def get_empresas_by_id(self, empresa_id: str):
         return Empresas.objects.filter(id=empresa_id)
+    
+    def create_csv(self):
+        empresa = self.get_empresa()
+        dados = [[
+                    'empresa_id',
+                    'razao_social',
+                    'nome_fantasia',
+                    'cnpj',
+                    'telefone',
+                    'user_alteracao',
+                    'data_atualizacao',
+                    'data_cadastro',
+                    'deleted'
+                ],]
+    
+        for itens in empresa:
+            valores = [
+                        str(itens.id),
+                        str(itens.razao_social),
+                        str(itens.nome_fantasia),
+                        str(itens.cnpj),
+                        str(itens.telefone),
+                        str(itens.user_alteracao),
+                        str(itens.data_atualizacao),
+                        str(itens.data_cadastro),
+                        str(itens.deleted) 
+                      ]
+            dados.append(valores)
+    
+        with open('/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv', 'w') as arquivo:
+            relatorio_empresa = csv.writer(arquivo)
+            for linha in dados:
+                relatorio_empresa.writerow(linha)
+        
+        return JsonResponse(data={"sucess": "Relatório disponibilizado"}, status=200)   
+    
     
     def autocomplete_empresa(self, request, cnpj: str):
         dados_cadastrais = busca_cnpj(cnpj=cnpj)

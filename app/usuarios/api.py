@@ -1,9 +1,10 @@
 from ninja import Router
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from app.usuarios.service import UsuariosService
 from app.usuarios.schemas import UserSchemaOut, UserSchemaIn
 from app.authenticate.service import JWTAuth
 from app.utils.jwt_manager import authenticate
+
 
 colaborador_router = Router(auth=JWTAuth(), tags=['Colaborador'])
 service = UsuariosService()
@@ -17,12 +18,16 @@ def get_user(request):
     token = authenticate(request)
     return busca_usuarios(token)
     
-
 @colaborador_router.get("{usuario_id}", response=list[UserSchemaOut])
 def get_user_by_id(request, usuario_id: str):
     token = authenticate(request)
     return service.get_user_by_id(request, usuario_id=token.get("usuario_id"))
     
+@colaborador_router.get("relatorio/")
+def create_csv(request):
+    service.create_csv(request)
+    return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)
+
 
 #POSTS
 @colaborador_router.post("", auth=None)

@@ -1,4 +1,5 @@
 from ninja import Router
+from django.http import FileResponse
 from app.authenticate.service import JWTAuth
 from app.clientes.service import ClienteService
 from app.clientes.schemas import ClienteSchemaIn, ClienteSchemaOut
@@ -18,6 +19,11 @@ def get_cliente_by_id(request, cliente_id: str):
     token = authenticate(request)
     return service.get_cliente_by_id(cliente_id, token.get("empresa_id"))
     
+@clientes_router.get("relatorio/")
+def create_csv(request):
+    service.create_csv(request)
+    return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)
+
 
 #POSTS
 @clientes_router.post("", auth=None, response=list[ClienteSchemaOut])

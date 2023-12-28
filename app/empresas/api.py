@@ -1,4 +1,5 @@
 from ninja import Router
+from django.http import FileResponse
 from app.empresas.service import EmpresasService
 from app.empresas.schemas import EmpresaSchemaOut, EmpresaSchemaIn, EmpresaSchemaAuto
 from app.authenticate.service import JWTAuth
@@ -11,16 +12,19 @@ service = EmpresasService ()
 def get_empresa(request):
     return service.get_empresa()    
     
-
 @empresas_router.get("{empresa_id}", response=EmpresaSchemaOut, auth=None)
 def get_empresas_by_id(request, empresa_id: str):
-    return service.get_empresas_by_id(id = empresa_id)
+    return service.get_empresas_by_id(empresa_id)
     
 
 @empresas_router.get("autocomplete/{cnpj}", response=EmpresaSchemaAuto, auth=None)
 def autocomplete_empresa(request, cnpj: str):
-    return service.autocomplete_empresa(request, cnpj=cnpj)
+    return service.autocomplete_empresa(request, cnpj)
     
+@empresas_router.get("relatorio/")
+def create_csv(request):
+    service.create_csv()
+    return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)
 
 #POST
 @empresas_router.post("")

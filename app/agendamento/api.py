@@ -1,4 +1,5 @@
 from ninja import Router
+from django.http import FileResponse
 from app.agendamento.service import AgendaService
 from app.agendamento.schemas import AgendaSchemaOut, AgendaBase
 from app.authenticate.service import JWTAuth
@@ -23,6 +24,11 @@ def get_agendamento_by_id(request, agendamento_id: str):
 def get_agenda_by_colaborador(request, colaborador_id: str):
     token = authenticate(request)
     return service.get_agenda_by_colaborador(colaborador_id, token.get("empresa_id"))
+
+@agendamento_router.get("relatorio/")
+def create_csv(request):
+    service.create_csv(request)
+    return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)
 
 #POST
 @agendamento_router.post("")

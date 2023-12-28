@@ -40,13 +40,15 @@ class DetalheService:
         detalhes_servico = Detalhes.objects.create(**dados)
         
         material.estoque -= payload.quantidade
-        
-            
+                    
         estoque = {"estoque": material.estoque}
         for attr, value in estoque.items():
             setattr(material, attr, value)
         material.save()
         
+        if material.estoque <= 10:
+            return JsonResponse(data={"sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}', "aviso": "Estoque baixo, verificar!!"}, status=200)  
+          
         return JsonResponse(data={"sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}'}, status=200)
     
     def update_servico(self, detalhe_id: str, empresa_id: str, payload: DetalheBase):
