@@ -1,5 +1,5 @@
 from ninja import Schema
-from datetime import date
+from datetime import datetime, date
 from uuid import UUID
 class MateriaisSchema(Schema):
     descricao: str
@@ -8,3 +8,6 @@ class MateriaisSchema(Schema):
     empresa_id: UUID
     data_validade: date = None
     estoque: int
+    
+class MateriaisSchemaOut(MateriaisSchema):  
+    data_criacação: datetime = datetime.now()

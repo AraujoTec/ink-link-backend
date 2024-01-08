@@ -15,7 +15,7 @@ class CustomUserAdmin(UserAdmin):
         "is_active",
     )
     fieldsets = (
-        (None, {"fields": ("email", "first_name", "last_name", "password", "groups")}),
+        (None, {"fields": ("email", "first_name", "last_name", "password", "empresa")}),
         ("Permissions", {"fields": ("is_staff", "is_active")}),
     )
     add_fieldsets = (
@@ -29,6 +29,7 @@ class CustomUserAdmin(UserAdmin):
                     "last_name",
                     "password1",
                     "password2",
+                    "empresa",
                     "is_staff",
                     "is_active",
                 ),

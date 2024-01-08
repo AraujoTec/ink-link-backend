@@ -15,6 +15,6 @@ class Cargos(models.Model):
         verbose_name_plural = "Cargos"
         
     def __str__(self):
-        return str(self.id)
+        return str(self.cargo)
     
     

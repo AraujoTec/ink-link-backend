@@ -47,7 +47,12 @@ INSTALLED_APPS = [
     'app.materiais',
     'app.authenticate',
     'app.cargos',
-        
+    'app.clientes',
+    'app.servicos',
+    'app.payments',
+    'app.agendamento',
+    'app.detalhe_servico'
+    
 ]
 
 

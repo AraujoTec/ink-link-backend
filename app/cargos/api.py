@@ -11,18 +11,18 @@ service = CargosService ()
 @cargos_router.get("", response=list[CargoSchemaOut])
 def get_cargo(request):
     token = authenticate(request)
-    response = service.get_cargo(empresa_id=token.get("empresa_id"))    
-    return response
+    return service.get_cargo(empresa_id=token.get("empresa_id"))    
+    
 
 #POST
 @cargos_router.post("cargo")
 def create_cargo(request, payload: CargoSchema):
-    response = service.create_cargo(request, payload)
-    return response
+    return service.create_cargo(request, payload)
+    
 
 #DELETE
 @cargos_router.delete("{cargo_id}")
 def delete_cargo(request, cargo_id: str):
-    response = service.delete_cargo(request, cargo_id)
-    return response
+    return service.delete_cargo(request, cargo_id)
+    
 
