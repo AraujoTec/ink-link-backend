@@ -19,9 +19,14 @@ class MateriaisService:
         material.preco_revenda = material.preco_revenda/100
         return material
 
-    def create_csv(self, request):
+    def create_csv(self, request, ordenacao):
         token = authenticate(request)
         materiais = Materiais.objects.filter(empresa_id = token.get("empresa_id"))
+        
+        if not ordenacao:
+            ordenacao = 'descricao'
+        materiais.order_by(ordenacao)
+        
         dados = [[
                     'material_id',
                     'descricao',

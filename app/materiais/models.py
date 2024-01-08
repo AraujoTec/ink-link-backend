@@ -8,6 +8,7 @@ class Materiais(models.Model):
     preco_revenda = models.IntegerField()
     empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
     data_validade = models.DateField(default = None)
+    data_criacao = models.DateField(default = None)
     estoque = models.IntegerField()
     class Meta:
         db_table = "materiais"

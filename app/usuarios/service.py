@@ -30,7 +30,6 @@ class UsuariosService:
                         f'{str(itens.first_name)} {itens.last_name}',
                         str(itens.empresa),
                         str(itens.cargo),
-
                         str(itens.data_nascimento),
                         str(itens.cpf)               
                      ]

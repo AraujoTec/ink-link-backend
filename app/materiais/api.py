@@ -1,27 +1,28 @@
 from ninja import Router
 from django.http import JsonResponse, FileResponse
 from app.materiais.service import MateriaisService
-from app.materiais.schemas import MateriaisSchema
+from app.materiais.schemas import MateriaisSchema, MateriaisSchemaOut
 from app.authenticate.service import JWTAuth
 from app.utils.jwt_manager import authenticate
+from datetime import datetime
 
 materiais_router = Router(auth=JWTAuth(), tags=["Materiais"] )
 service = MateriaisService()
 
 #GETS
-@materiais_router.get("", response=list[MateriaisSchema])
+@materiais_router.get("", response=list[MateriaisSchemaOut])
 def get_itens(request):
     token = authenticate(request)
     return service.get_itens(token.get("empresa_id"))
     
-@materiais_router.get("{item_id}", response=list[MateriaisSchema])
+@materiais_router.get("{item_id}", response=list[MateriaisSchemaOut])
 def get_item_by_id(request, item_id: int):
     token = authenticate(request)
     return service.get_item_by_id(item_id, token.get("empresa_id"))
     
 @materiais_router.get("relatorios/")
-def create_csv(request):
-    service.create_csv(request)
+def create_csv(request, ordernacao: str = None):
+    service.create_csv(request, ordernacao)
     return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)
 
 
