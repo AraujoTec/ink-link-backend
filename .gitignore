@@ -165,3 +165,6 @@ venv/
 
 # Visual Studio Code
 .vscode/
+
+#Media Extract CSV
+.media/

@@ -141,3 +141,6 @@ CORS_ALLOW_ORIGINS = [
 ]
 
 AUTH_USER_MODEL = "authenticate.User"
+
+MEDIA_ROOT = f'{BASE_DIR}/media'
+
