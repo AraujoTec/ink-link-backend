@@ -47,7 +47,7 @@ class DetalheService:
                
         detalhes_servico = Detalhes.objects.create(**dados)
         
-        material.estoque -= payload.quantidade
+        material.estoque = payload.quantidade
                     
         estoque = {"estoque": material.estoque}
         for attr, value in estoque.items():
