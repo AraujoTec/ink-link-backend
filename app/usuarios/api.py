@@ -23,7 +23,7 @@ def get_user_by_id(request, usuario_id: str):
     token = authenticate(request)
     return service.get_user_by_id(request, usuario_id=token.get("usuario_id"))
     
-@colaborador_router.get("relatorio/")
+@colaborador_router.get("reports/")
 def create_csv(request):
     service.create_csv(request)
     return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)

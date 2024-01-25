@@ -1,19 +1,29 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
+from datetime import datetime
+from app.settings import MEDIA_ROOT
 from app.clientes.models import Clientes
 from app.clientes.schemas import ClienteSchemaIn
 from app.utils.jwt_manager import authenticate
-import csv
+from app.utils.csv import generate_csv
 class ClienteService:
+    
+    def __init__(self, request):
+        self.token = authenticate(request)
+        self.empresa = self.token.get('empresa_id')
+        self.cliente = Clientes.objects.filter(empresa_id=self.empresa)
+    
 
-    def get_cliente(self, empresa_id: str):
-        return Clientes.objects.filter(empresa_id=empresa_id)
+    def get_cliente(self):
+        return self.cliente
     
     def get_cliente_by_id(self, cliente_id: str, empresa_id: str):
         return Clientes.objects.filter(id=cliente_id, empresa_id=empresa_id, deleted=False)
 
-    def create_csv(self, request):
-        token = authenticate(request)
-        cliente = self.get_cliente(token.get("empresa_id"))
+    def create_csv(self, filters):
+        datetime_now = datetime.now()  
+        path = f'{MEDIA_ROOT}/{self.empresa}'
+        clientes = filters.filter(self.cliente)
+        
         dados = [[
                     'cliente_id',
                     'nome',
@@ -25,10 +35,11 @@ class ClienteService:
                     'cpf',
                     'cep',
                     'telefone',
-                    'instagram'
+                    'instagram',
+                    'date_joined'
                 ],]
     
-        for itens in cliente:
+        for itens in clientes:
             valores = [
                         str(itens.id),  
                         f'{str(itens.first_name)} {itens.last_name}',
@@ -40,22 +51,20 @@ class ClienteService:
                         str(itens.cpf),
                         str(itens.cep),
                         str(itens.telefone),
-                        str(itens.instagram)                
+                        str(itens.instagram),
+                        str(itens.date_joined)                
                     ]
             dados.append(valores)
-    
-        with open('/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv', 'w') as arquivo:
-            relatorio_cliente = csv.writer(arquivo)
-            for linha in dados:
-                relatorio_cliente.writerow(linha)
         
-        return JsonResponse(data={"sucess": "Relatório disponibilizado"}, status=200)
+        generate_csv(path, datetime_now, dados)
+        
+        return FileResponse(open(f'{path}/reports_{datetime_now}.csv', 'rb'), as_attachment=True)
 
     def create_cliente(self, payload:ClienteSchemaIn):
-        busca_cpf = Clientes.objects.filter(cpf=payload.cpf)
-        if busca_cpf :
+        cpf = Clientes.objects.filter(cpf=payload.cpf)
+        if cpf:
             return JsonResponse(data={'error': "CPF já cadastrado"}, status=400)
-        if not payload.cpf.isdigit() == True: 
+        if not payload.cpf.isdigit(): 
             return JsonResponse(data={'error': "CPF inválido"}, status=400)
         cliente = Clientes.objects.create(**payload.dict())
         return JsonResponse(data={"sucess": f'{"Cliente cadastrado com sucesso"} - {cliente.id}'}, status=200)

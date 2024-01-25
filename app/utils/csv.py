@@ -11,4 +11,8 @@ def generate_csv(path, datetime_now, dados):
     with open(f'{path}/reports_{datetime_now}.csv','w') as arquivo:
         material_reports = csv.writer(arquivo)
         material_reports.writerows(dados)
+        
+        
+        
+        
     

@@ -1,0 +1,4 @@
+id,descricao,custo,preco_revenda,empresa,data_validade,data_criacao,estoque
+5c8deec7-ada1-4e21-acaa-b222942d0515,Agulha,0.01,0.01,2023-12-21,1,94a3eeab-0ce0-4308-a5f7-f3fd663087c3
+874d71c1-3149-463f-beec-717b712289cf,tinta,0.02,0.02,2024-01-31,2,94a3eeab-0ce0-4308-a5f7-f3fd663087c3
+2c710142-a237-4435-99e7-e1a5bab7e844,Joia,0.03,0.03,2023-12-22,3,94a3eeab-0ce0-4308-a5f7-f3fd663087c3

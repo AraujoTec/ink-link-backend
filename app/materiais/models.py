@@ -6,10 +6,10 @@ class Materiais(models.Model):
     descricao = models.CharField(max_length=100)
     custo = models.IntegerField()
     preco_revenda = models.IntegerField()
-    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
     data_validade = models.DateField(default = None)
     data_criacao = models.DateField(default = None)
     estoque = models.IntegerField()
+    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
     class Meta:
         db_table = "materiais"
         verbose_name = "material"

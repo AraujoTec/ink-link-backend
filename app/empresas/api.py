@@ -21,7 +21,7 @@ def get_empresas_by_id(request, empresa_id: str):
 def autocomplete_empresa(request, cnpj: str):
     return service.autocomplete_empresa(request, cnpj)
     
-@empresas_router.get("relatorio/")
+@empresas_router.get("reports/")
 def create_csv(request):
     service.create_csv()
     return FileResponse(open("/home/gabriel/Documentos/projetos/ink-link-backend/app/utils/docs/relatorios.csv", 'rb'), as_attachment=True)

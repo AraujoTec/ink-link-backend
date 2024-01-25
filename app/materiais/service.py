@@ -16,8 +16,7 @@ class MateriaisService:
     def get_material(self, item_id: str):
         return Materiais.objects.filter(pk=item_id, empresa_id= self.empresa, deleted=False).first()
         
-    def get_itens(self, request):
-        service = MateriaisService(request)
+    def get_itens(self):
         materiais = self.materiais
         for material in materiais:
             material.custo = material.custo/100
@@ -31,13 +30,10 @@ class MateriaisService:
         material.preco_revenda = material.preco_revenda/100
         return material
 
-    def create_csv(self, request, filters):
-        service = MateriaisService(request)
+    def create_csv(self, filters):
         datetime_now = datetime.now()  
         path = f'{MEDIA_ROOT}/{self.empresa}'
-        
         materiais = filters.filter(self.materiais)
-        
         dados = format_csv(Materiais)
     
         for itens in materiais:
@@ -51,8 +47,9 @@ class MateriaisService:
                         str(custo),
                         str(revenda),
                         str(itens.data_validade),
+                        str(itens.data_criacao),
                         str(itens.estoque),
-                        str(itens.empresa)             
+                        str(itens.empresa)         
                     ]
             dados.append(valores)
         
@@ -61,9 +58,8 @@ class MateriaisService:
         return FileResponse(open(f'{path}/reports_{datetime_now}.csv', 'rb'), as_attachment=True)
 
 
-    def create_item(self, request, payload:MateriaisSchema):
-        service = MateriaisService(request)
-        
+    def create_item(self, payload:MateriaisSchema):
+               
         if not self.empresa == str(payload.empresa_id):
             return JsonResponse(data={'error': "usuário inválido"}, status=400)
             
@@ -76,7 +72,7 @@ class MateriaisService:
 
     def update_item(self, request, item_id: str, payload: MateriaisSchema):
         service = MateriaisService(request)
-        
+
         if not self.empresa == str(payload.empresa_id):
             return JsonResponse(data={'error': "usuário inválido"}, status=400)
         
