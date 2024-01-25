@@ -1,5 +1,6 @@
-from ninja import Schema
+from ninja import Schema, FilterSchema, Field
 from datetime import datetime, date
+from typing import Optional
 from uuid import UUID
 class MateriaisSchema(Schema):
     descricao: str
@@ -10,4 +11,12 @@ class MateriaisSchema(Schema):
     estoque: int
     
 class MateriaisSchemaOut(MateriaisSchema):  
-    data_criacação: datetime = datetime.now()
+    data_criacao: datetime = datetime.now()
+    
+class FiltersSchema(FilterSchema):
+    descricao: Optional[str] = Field(None, q='descricao__icontains')
+    custo: Optional[float] = None
+    preco_revenda: Optional[float] = None
+    data_validade: Optional[date] = Field(None, q='data_validade__icontains')
+    estoque: Optional[int] =Field(None, q='estoque__icontains')
+    data_criacao: Optional[datetime] =Field(None, q='data_criacao__icontains')

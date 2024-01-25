@@ -11,7 +11,7 @@ from app.materiais.api import materiais_router
 from app.servicos.api import servicos_router
 
 
-api = NinjaAPI(csrf=True, title="INK-LINK")
+api = NinjaAPI(csrf=False, title="INK-LINK")
 
 api.add_router("/authenticate/", auth_router)
 api.add_router("/agendamento/", agendamento_router)

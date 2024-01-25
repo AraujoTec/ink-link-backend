@@ -1,10 +1,19 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
+from datetime import datetime
+from app.settings import MEDIA_ROOT
 from app.detalhe_servico.models import Detalhes
 from app.detalhe_servico.schemas import DetalheBase
 from app.materiais.models import Materiais
 from app.servicos.models import Servicos
+from app.utils.jwt_manager import authenticate
+from app.utils.csv import format_csv, generate_csv
 
 class DetalheService:
+    
+    def __init__(self, request):
+        self.token = authenticate(request)
+        self.empresa = self.token.get("empresa_id")
+        self.servico = Detalhes.objects.filter(empresa_id=self.empresa)
     
     def _calculos(self, material, servico, payload):
         preco_revenda = material.preco_revenda
@@ -21,12 +30,11 @@ class DetalheService:
         
         return dados
     
-    
-    def get_servico(self, empresa_id: str):
-        return Detalhes.objects.filter(empresa_id=empresa_id) 
+    def get_servico(self):
+        return self.empresa 
 
-    def get_servico_by_id(self, detalhe_id: str, empresa_id: str):
-        return Detalhes.objects.filter(id=detalhe_id, empresa_id=empresa_id) 
+    def get_servico_by_id(self, detalhe_id: str):
+        return Detalhes.objects.filter(id=detalhe_id, empresa_id=self.empresa) 
 
     def create_servico(self, payload: DetalheBase):
         material = Materiais.objects.filter(id=payload.materiais_id).first()
@@ -51,6 +59,28 @@ class DetalheService:
           
         return JsonResponse(data={"sucess": f'{"Serviço criado com sucesso"} - {detalhes_servico.id}'}, status=200)
     
+    def create_csv(self, filters):
+        datetime_now = datetime.now()  
+        path = f'{MEDIA_ROOT}/{self.empresa}'
+        servicos = filters.filter(self.servico)
+        dados = format_csv(Servicos)
+    
+        for itens in servicos:
+            valores = [            
+                        str(itens.id),  
+                        str(itens.servico),
+                        str(itens.materiais),
+                        str(itens.quantidade),
+                        str(itens.valor_total),
+                        str(itens.lucro_estudio),
+                        str(itens.lucro_colaborador),
+                    ]
+            dados.append(valores)
+        
+        generate_csv(path, datetime_now, dados)
+        
+        return FileResponse(open(f'{path}/reports_{datetime_now}.csv', 'rb'), as_attachment=True)
+
     def update_servico(self, detalhe_id: str, empresa_id: str, payload: DetalheBase):
         detalhes_servico = self.get_servico_by_id(detalhe_id=detalhe_id, empresa_id=empresa_id)
         for attr, value in payload.dict.items():

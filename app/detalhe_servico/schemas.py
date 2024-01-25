@@ -1,5 +1,6 @@
-from ninja import Schema
+from ninja import Schema, FilterSchema, Field
 from uuid import UUID
+from typing import Optional
 
 class DetalheBase(Schema):
     servico_id: UUID
@@ -12,3 +13,11 @@ class DetalheSchemaOut(DetalheBase):
     valor_total: float
     lucro_estudio: float
     lucro_colaborador: float
+    
+    
+class FiltersSchema(FilterSchema):
+  id: Optional[str] = None 
+    servico:Optional[str] = None
+    materiais: Optional[str] = None
+    quantidade: Optional[int] = None
+    

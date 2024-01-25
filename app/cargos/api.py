@@ -5,24 +5,24 @@ from app.authenticate.service import JWTAuth
 from app.utils.jwt_manager import authenticate
 
 cargos_router = Router(auth=JWTAuth(), tags=['Cargos'])
-service = CargosService ()
 
 #GETS
 @cargos_router.get("", response=list[CargoSchemaOut])
 def get_cargo(request):
-    token = authenticate(request)
-    return service.get_cargo(empresa_id=token.get("empresa_id"))    
+    service = CargosService(request)
+    return service.get_cargo()    
     
-
 #POST
 @cargos_router.post("cargo")
 def create_cargo(request, payload: CargoSchema):
-    return service.create_cargo(request, payload)
+    service = CargosService(request)
+    return service.create_cargo(payload)
     
 
 #DELETE
 @cargos_router.delete("{cargo_id}")
 def delete_cargo(request, cargo_id: str):
-    return service.delete_cargo(request, cargo_id)
+    service = CargosService(request)
+    return service.delete_cargo(cargo_id)
     
 
