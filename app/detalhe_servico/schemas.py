@@ -17,7 +17,7 @@ class DetalheSchemaOut(DetalheBase):
     
 class FiltersSchema(FilterSchema):
   id: Optional[str] = None 
-    servico:Optional[str] = None
-    materiais: Optional[str] = None
-    quantidade: Optional[int] = None
+  servico:Optional[str] = None
+  materiais: Optional[str] = None
+  quantidade: Optional[int] = None
     

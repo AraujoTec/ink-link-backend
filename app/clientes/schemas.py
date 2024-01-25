@@ -29,7 +29,7 @@ class ClienteSchemaIn(ClienteSchemaBase):
     empresa_id: UUID
 
 class FiltersSchema(FilterSchema):
-    id: Optional[str] = Field(None, q='id__icontains')
+    id: Optional[str] = None
     servico_id: Optional[str] = Field(None, q='servico_id__icontains')
     empresa_id: Optional[str] = Field(None, q='empresa_id__icontains')
     cpf: Optional[str] = Field(None, q='cpf__icontains')
